@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="OmniControl.App.Views.HardwarePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:OmniControl.Core.Models.Hardware"
+    xmlns:vm="using:OmniControl.App.ViewModels"
+    mc:Ignorable="d">
+
+    <ScrollViewer Padding="24,16,24,28">
+        <StackPanel Spacing="20" MaxWidth="880" HorizontalAlignment="Left">
+            <!-- Hardware Inventory Card -->
+            <Border Style="{StaticResource FluentCardStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="SYSTEM HARDWARE INVENTORY" Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="Processor:" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" />
+                            <TextBlock Text="{x:Bind ViewModel.CpuName, Mode=OneWay}" FontWeight="SemiBold" Foreground="{StaticResource AppTextPrimaryBrush}" FontSize="12" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="Motherboard:" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" />
+                            <TextBlock Text="{x:Bind ViewModel.MotherboardName, Mode=OneWay}" FontWeight="SemiBold" Foreground="{StaticResource AppTextPrimaryBrush}" FontSize="12" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="{x:Bind ViewModel.BiosVersion, Mode=OneWay}" Foreground="{StaticResource AppTextMutedBrush}" FontSize="11" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="Memory:" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" />
+                            <TextBlock Text="{x:Bind ViewModel.RamDetails, Mode=OneWay}" FontWeight="SemiBold" Foreground="{StaticResource AppTextPrimaryBrush}" FontSize="12" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Border Style="{StaticResource LiveBadgeStyle}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Ellipse Width="6" Height="6" Fill="{StaticResource AppSuccessBrush}" />
+                                <TextBlock Text="Live Telemetry (2s)" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                            </StackPanel>
+                        </Border>
+                        <Button Command="{x:Bind ViewModel.RefreshHardwareDetailsCommand}" Padding="8,6" ToolTipService.ToolTip="Force Immediate Refresh">
+                            <FontIcon Glyph="&#xE72C;" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Device Category Filter Bar -->
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Spacing="3" VerticalAlignment="Center">
+                    <TextBlock Text="TEMPERATURE MONITORING" Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                    <TextBlock Text="Grouped by hardware component with primary package thermals and compact per-core details." FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                </StackPanel>
+
+                <ComboBox Grid.Column="1" HorizontalAlignment="Right" SelectedIndex="{x:Bind ViewModel.CategoryFilterIndex, Mode=TwoWay}" Width="190">
+                    <x:String>All Hardware (Overview)</x:String>
+                    <x:String>Processors (CPU)</x:String>
+                    <x:String>Graphics (GPU)</x:String>
+                    <x:String>Storage Drives</x:String>
+                    <x:String>Motherboard &amp; System</x:String>
+                </ComboBox>
+            </Grid>
+
+            <!-- Grouped Temperature Sensors List -->
+            <ItemsControl ItemsSource="{x:Bind ViewModel.FilteredTemperatureGroups, Mode=OneWay}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:HardwareDeviceGroup">
+                        <Border Style="{StaticResource FluentCardStyle}" Margin="0,0,0,14">
+                            <StackPanel Spacing="14">
+                                <!-- Group Header & Primary Thermal Metric -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Device Details -->
+                                    <StackPanel Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                            <FontIcon Glyph="{x:Bind Glyph}" FontSize="14" Foreground="{StaticResource AppAccentBrush}" />
+                                            <Border Background="#16202A" BorderBrush="#1F364D" BorderThickness="1" CornerRadius="2" Padding="6,1">
+                                                <TextBlock Text="{x:Bind DeviceCategory}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource AppAccentBrush}" CharacterSpacing="60" />
+                                            </Border>
+                                            <TextBlock Text="{x:Bind DeviceName}" FontWeight="Bold" FontSize="14" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                        </StackPanel>
+                                        <TextBlock Text="{x:Bind PrimaryMetricLabel, Mode=OneWay}" FontSize="11" Foreground="{StaticResource AppTextMutedBrush}" Margin="22,0,0,0" />
+                                    </StackPanel>
+
+                                    <!-- Primary Metric Value & Status Pill -->
+                                    <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                                            <TextBlock Text="{x:Bind PrimaryMetricValue, Mode=OneWay}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                            <Border Background="#14281E" BorderBrush="#2D6A4F" BorderThickness="1" CornerRadius="2" Padding="6,2" VerticalAlignment="Center">
+                                                <TextBlock Text="{x:Bind StatusText, Mode=OneWay}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AppSuccessBrush}" />
+                                            </Border>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Primary Sensors Wrap Panel -->
+                                <ItemsControl ItemsSource="{x:Bind PrimarySensors}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsWrapGrid Orientation="Horizontal" ItemWidth="180" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:SensorMetric">
+                                            <Border Background="#111111" BorderBrush="{StaticResource AppDividerBrush}" BorderThickness="1" CornerRadius="2" Padding="10,7" Margin="0,0,8,8">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{x:Bind Name}" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Grid.Column="1" Text="{x:Bind FormattedValue, Mode=OneWay}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AppWarningBrush}" VerticalAlignment="Center" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- Per-Core Details Section (Collapsible) -->
+                                <StackPanel Visibility="{x:Bind HasDetails, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" Spacing="10">
+                                    <Border Background="{StaticResource AppDividerBrush}" Height="1" />
+
+                                    <Button Command="{x:Bind ToggleDetailsCommand}" Padding="10,5" HorizontalAlignment="Left">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <FontIcon Glyph="&#xE70D;" FontSize="11" Foreground="{StaticResource AppAccentBrush}" />
+                                            <TextBlock Text="{x:Bind ToggleButtonText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold" />
+                                        </StackPanel>
+                                    </Button>
+
+                                    <!-- Compact Per-Core Chips Grid -->
+                                    <Border Visibility="{x:Bind ShowDetails, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"
+                                            Background="#0E0E0E" BorderBrush="{StaticResource AppDividerBrush}" BorderThickness="1" CornerRadius="2" Padding="10">
+                                        <StackPanel Spacing="8">
+                                            <TextBlock Text="INDIVIDUAL CORE SENSORS" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AppTextMutedBrush}" CharacterSpacing="60" />
+                                            <ItemsControl ItemsSource="{x:Bind DetailSensors}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <ItemsWrapGrid Orientation="Horizontal" ItemWidth="130" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="models:SensorMetric">
+                                                        <Border Background="#141414" BorderBrush="#222222" BorderThickness="1" CornerRadius="1" Padding="8,5" Margin="0,0,6,6">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Text="{x:Bind Name}" FontSize="10" Foreground="{StaticResource AppTextSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                                <TextBlock Grid.Column="1" Text="{x:Bind FormattedValue, Mode=OneWay}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource AppTextPrimaryBrush}" VerticalAlignment="Center" Margin="6,0,0,0" />
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Organized Clock Frequencies Section -->
+            <StackPanel Spacing="10" Margin="0,8,0,0">
+                <TextBlock Text="CLOCK SPEEDS &amp; FREQUENCIES" Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <TextBlock Text="Real-time operating frequencies grouped by processor and graphics engines." FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+
+                <ItemsControl ItemsSource="{x:Bind ViewModel.ClockGroups, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:HardwareDeviceGroup">
+                            <Border Style="{StaticResource FluentCardStyle}" Margin="0,0,0,12">
+                                <StackPanel Spacing="12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                            <FontIcon Glyph="{x:Bind Glyph}" FontSize="13" Foreground="{StaticResource AppAccentBrush}" />
+                                            <TextBlock Text="{x:Bind DeviceName}" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                            <TextBlock Text="{x:Bind PrimaryMetricLabel, Mode=OneWay}" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" VerticalAlignment="Center" />
+                                            <TextBlock Text="{x:Bind PrimaryMetricValue, Mode=OneWay}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AppAccentBrush}" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Primary Clocks Row -->
+                                    <ItemsControl ItemsSource="{x:Bind PrimarySensors}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <ItemsWrapGrid Orientation="Horizontal" ItemWidth="180" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:SensorMetric">
+                                                <Border Background="#111111" BorderBrush="{StaticResource AppDividerBrush}" BorderThickness="1" CornerRadius="2" Padding="10,6" Margin="0,0,8,8">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{x:Bind Name}" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Grid.Column="1" Text="{x:Bind FormattedValue, Mode=OneWay}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AppAccentBrush}" VerticalAlignment="Center" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <!-- Detail Clocks (Collapsible) -->
+                                    <StackPanel Visibility="{x:Bind HasDetails, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" Spacing="10">
+                                        <Button Command="{x:Bind ToggleDetailsCommand}" Padding="8,4" HorizontalAlignment="Left">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <FontIcon Glyph="&#xE70D;" FontSize="11" Foreground="{StaticResource AppAccentBrush}" />
+                                                <TextBlock Text="{x:Bind ToggleButtonText, Mode=OneWay}" FontSize="11" />
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Border Visibility="{x:Bind ShowDetails, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"
+                                                Background="#0E0E0E" BorderBrush="{StaticResource AppDividerBrush}" BorderThickness="1" CornerRadius="2" Padding="10">
+                                            <ItemsControl ItemsSource="{x:Bind DetailSensors}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <ItemsWrapGrid Orientation="Horizontal" ItemWidth="130" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="models:SensorMetric">
+                                                        <Border Background="#141414" BorderBrush="#222222" BorderThickness="1" CornerRadius="1" Padding="8,5" Margin="0,0,6,6">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Text="{x:Bind Name}" FontSize="10" Foreground="{StaticResource AppTextSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                                <TextBlock Grid.Column="1" Text="{x:Bind FormattedValue, Mode=OneWay}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource AppAccentBrush}" VerticalAlignment="Center" Margin="6,0,0,0" />
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

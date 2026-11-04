@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ══════════════════════════════════════════════════════════
+         BLOCKY MINIMAL DESIGN SYSTEM — Sharp Edges · Clean Lines
+         ══════════════════════════════════════════════════════════ -->
+
+    <!-- Core Palette: Deep noir with neutral grays -->
+    <Color x:Key="AppBackgroundColor">#0A0A0A</Color>
+    <Color x:Key="AppSurfaceColor">#111111</Color>
+    <Color x:Key="AppCardBackgroundColor">#161616</Color>
+    <Color x:Key="AppCardHoverBackgroundColor">#1C1C1C</Color>
+    <Color x:Key="AppCardBorderColor">#262626</Color>
+    <Color x:Key="AppDividerColor">#1E1E1E</Color>
+
+    <!-- Accent: Electric cyan -->
+    <Color x:Key="AppAccentColor">#00D4FF</Color>
+    <Color x:Key="AppAccentHoverColor">#00B8E6</Color>
+    <Color x:Key="AppAccentMutedColor">#0A2A33</Color>
+
+    <!-- Semantic Colors -->
+    <Color x:Key="AppSuccessColor">#00E676</Color>
+    <Color x:Key="AppWarningColor">#FFB300</Color>
+    <Color x:Key="AppErrorColor">#FF3D57</Color>
+
+    <!-- Typography Colors -->
+    <Color x:Key="AppTextPrimaryColor">#EDEDED</Color>
+    <Color x:Key="AppTextSecondaryColor">#888888</Color>
+    <Color x:Key="AppTextMutedColor">#555555</Color>
+
+    <!-- Sidebar Colors -->
+    <Color x:Key="AppSidebarBackgroundColor">#0E0E0E</Color>
+    <Color x:Key="AppSidebarBorderColor">#1A1A1A</Color>
+    <Color x:Key="AppSidebarItemHoverColor">#1A1A1A</Color>
+    <Color x:Key="AppSidebarItemActiveColor">#161616</Color>
+
+    <!-- ─── Brushes ─── -->
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}" />
+    <SolidColorBrush x:Key="AppSurfaceBrush" Color="{StaticResource AppSurfaceColor}" />
+    <SolidColorBrush x:Key="AppCardBackgroundBrush" Color="{StaticResource AppCardBackgroundColor}" />
+    <SolidColorBrush x:Key="AppCardHoverBackgroundBrush" Color="{StaticResource AppCardHoverBackgroundColor}" />
+    <SolidColorBrush x:Key="AppCardBorderBrush" Color="{StaticResource AppCardBorderColor}" />
+    <SolidColorBrush x:Key="AppDividerBrush" Color="{StaticResource AppDividerColor}" />
+    <SolidColorBrush x:Key="AppAccentBrush" Color="{StaticResource AppAccentColor}" />
+    <SolidColorBrush x:Key="AppAccentHoverBrush" Color="{StaticResource AppAccentHoverColor}" />
+    <SolidColorBrush x:Key="AppAccentMutedBrush" Color="{StaticResource AppAccentMutedColor}" />
+    <SolidColorBrush x:Key="AppSuccessBrush" Color="{StaticResource AppSuccessColor}" />
+    <SolidColorBrush x:Key="AppWarningBrush" Color="{StaticResource AppWarningColor}" />
+    <SolidColorBrush x:Key="AppErrorBrush" Color="{StaticResource AppErrorColor}" />
+    <SolidColorBrush x:Key="AppTextPrimaryBrush" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="AppTextSecondaryBrush" Color="{StaticResource AppTextSecondaryColor}" />
+    <SolidColorBrush x:Key="AppTextMutedBrush" Color="{StaticResource AppTextMutedColor}" />
+    <SolidColorBrush x:Key="AppSidebarBackgroundBrush" Color="{StaticResource AppSidebarBackgroundColor}" />
+    <SolidColorBrush x:Key="AppSidebarBorderBrush" Color="{StaticResource AppSidebarBorderColor}" />
+
+    <!-- ─── BLOCKY CARD: Sharp corners, strong border ─── -->
+    <Style x:Key="FluentCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource AppCardBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource AppCardBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="Padding" Value="20" />
+    </Style>
+
+    <Style x:Key="FluentInteractiveCardStyle" TargetType="Border" BasedOn="{StaticResource FluentCardStyle}">
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <!-- ─── Live Status Badge: Blocky pill ─── -->
+    <Style x:Key="LiveBadgeStyle" TargetType="Border">
+        <Setter Property="Background" Value="#0D1A1F" />
+        <Setter Property="BorderBrush" Value="#14333D" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="Padding" Value="8,3" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- ─── Typography Styles ─── -->
+    <Style x:Key="MetricValueTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+    </Style>
+
+    <Style x:Key="MetricLabelTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextMutedBrush}" />
+        <Setter Property="CharacterSpacing" Value="80" />
+    </Style>
+
+    <Style x:Key="SectionHeaderTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource AppTextPrimaryBrush}" />
+        <Setter Property="CharacterSpacing" Value="40" />
+    </Style>
+
+    <!-- ─── NavigationView Overrides for Blocky Sidebar ─── -->
+    <Thickness x:Key="NavigationViewContentMargin">0</Thickness>
+    <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
+    <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="{StaticResource AppCardBorderColor}" />
+    <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0</CornerRadius>
+
+    <!-- Sidebar background -->
+    <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="{StaticResource AppSidebarBackgroundColor}" />
+    <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="{StaticResource AppSidebarBackgroundColor}" />
+
+    <!-- Remove rounded corners from NavigationViewItems -->
+    <CornerRadius x:Key="NavigationViewItemCornerRadius">0</CornerRadius>
+    <CornerRadius x:Key="ControlCornerRadius">2</CornerRadius>
+    <CornerRadius x:Key="OverlayCornerRadius">2</CornerRadius>
+
+    <!-- NavigationViewItem selection indicator color -->
+    <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="{StaticResource AppAccentColor}" />
+
+    <!-- NavigationViewItem colors -->
+    <SolidColorBrush x:Key="NavigationViewItemForeground" Color="{StaticResource AppTextSecondaryColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPointerOver" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPressed" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemForegroundPointerOver" Color="{StaticResource AppTextPrimaryColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemForegroundPressed" Color="{StaticResource AppTextSecondaryColor}" />
+
+    <!-- NavigationViewItem background colors -->
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="{StaticResource AppSidebarItemActiveColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPointerOver" Color="{StaticResource AppSidebarItemHoverColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPressed" Color="{StaticResource AppSidebarItemActiveColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundPointerOver" Color="{StaticResource AppSidebarItemHoverColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundPressed" Color="{StaticResource AppSidebarItemActiveColor}" />
+
+    <!-- NavigationViewItem icon colors -->
+    <SolidColorBrush x:Key="NavigationViewItemIconForeground" Color="{StaticResource AppTextMutedColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemIconForegroundSelected" Color="{StaticResource AppAccentColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemIconForegroundSelectedPointerOver" Color="{StaticResource AppAccentColor}" />
+    <SolidColorBrush x:Key="NavigationViewItemIconForegroundPointerOver" Color="{StaticResource AppTextSecondaryColor}" />
+
+    <!-- NavigationView separator -->
+    <SolidColorBrush x:Key="NavigationViewItemSeparatorForeground" Color="{StaticResource AppDividerColor}" />
+
+</ResourceDictionary>

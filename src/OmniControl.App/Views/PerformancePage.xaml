@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="OmniControl.App.Views.PerformancePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:OmniControl.Core.Models.Hardware"
+    mc:Ignorable="d">
+
+    <ScrollViewer Padding="24,16,24,24">
+        <StackPanel Spacing="24">
+            <!-- Active Profile Card -->
+            <Border Style="{StaticResource FluentCardStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="ACTIVE WINDOWS POWER SCHEME" Style="{StaticResource MetricLabelTextBlockStyle}" VerticalAlignment="Center" />
+                            <Border Background="#14281E" BorderBrush="#2D6A4F" BorderThickness="1" CornerRadius="2" Padding="6,2">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <FontIcon Glyph="{x:Bind ViewModel.PowerSourceGlyph, Mode=OneWay}" FontSize="11" Foreground="{StaticResource AppSuccessBrush}" />
+                                    <TextBlock Text="{x:Bind ViewModel.CurrentPowerSourceText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource AppSuccessBrush}" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <TextBlock Text="{x:Bind ViewModel.ActivePlanName, Mode=OneWay}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource AppAccentBrush}" />
+
+                        <!-- AC & DC Badges -->
+                        <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,4,0,0">
+                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <FontIcon Glyph="&#xE701;" FontSize="12" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                <TextBlock Text="Plugged In (AC):" FontSize="12" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.AcPlanName, Mode=OneWay}" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource AppAccentBrush}" />
+                            </StackPanel>
+                            <Border Width="1" Height="14" Background="{StaticResource AppDividerBrush}" VerticalAlignment="Center" />
+                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <FontIcon Glyph="&#xE83F;" FontSize="12" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                <TextBlock Text="On Battery (DC):" FontSize="12" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.DcPlanName, Mode=OneWay}" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource AppWarningBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Text="Dynamic AC/DC switching active. Power modes automatically apply based on power plug state." FontSize="11" Foreground="{StaticResource AppTextMutedBrush}" Margin="0,2,0,0" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Border Style="{StaticResource LiveBadgeStyle}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Ellipse Width="6" Height="6" Fill="{StaticResource AppSuccessBrush}" />
+                                <TextBlock Text="Real-time (2s)" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                            </StackPanel>
+                        </Border>
+                        <Button Command="{x:Bind ViewModel.LoadDataCommand}" Padding="8,6" ToolTipService.ToolTip="Force Immediate Refresh">
+                            <FontIcon Glyph="&#xE72C;" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Quick Profiles Selector -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="QUICK PERFORMANCE PROFILES" Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.ApplyProfileCommand}" CommandParameter="Balanced">
+                        <StackPanel Orientation="Horizontal" Spacing="10" Padding="8,4">
+                            <FontIcon Glyph="&#xECAD;" Foreground="{StaticResource AppAccentBrush}" />
+                            <StackPanel HorizontalAlignment="Left">
+                                <TextBlock Text="Balanced" FontWeight="SemiBold" />
+                                <TextBlock Text="Optimal performance and battery life" FontSize="11" Foreground="{StaticResource AppTextMutedBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Grid.Column="1" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.ApplyProfileCommand}" CommandParameter="High performance">
+                        <StackPanel Orientation="Horizontal" Spacing="10" Padding="8,4">
+                            <FontIcon Glyph="&#xE735;" Foreground="{StaticResource AppWarningBrush}" />
+                            <StackPanel HorizontalAlignment="Left">
+                                <TextBlock Text="High Performance" FontWeight="SemiBold" />
+                                <TextBlock Text="Maximum clock speed and responsiveness" FontSize="11" Foreground="{StaticResource AppTextMutedBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Grid.Column="2" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.ApplyProfileCommand}" CommandParameter="Power saver">
+                        <StackPanel Orientation="Horizontal" Spacing="10" Padding="8,4">
+                            <FontIcon Glyph="&#xEBB5;" Foreground="{StaticResource AppSuccessBrush}" />
+                            <StackPanel HorizontalAlignment="Left">
+                                <TextBlock Text="Power Saver" FontWeight="SemiBold" />
+                                <TextBlock Text="Conserves power on mobile devices" FontSize="11" Foreground="{StaticResource AppTextMutedBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </StackPanel>
+
+            <!-- Discovered Power Schemes List -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="CONFIGURED POWER PLANS &amp; MODES" Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <ItemsControl ItemsSource="{x:Bind ViewModel.PowerPlans, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:PowerPlanInfo">
+                            <Border Style="{StaticResource FluentInteractiveCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel VerticalAlignment="Center" Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" FontSize="15" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                            
+                                            <!-- Effective Active Now Badge -->
+                                            <Border Background="#107C41" CornerRadius="2" Padding="6,2" Visibility="{x:Bind IsActive, Converter={StaticResource BoolToVisibility}}">
+                                                <TextBlock Text="ACTIVE NOW" FontSize="9" FontWeight="Bold" Foreground="White" />
+                                            </Border>
+
+                                            <!-- AC Preset Badge -->
+                                            <Border Background="#1E3A8A" CornerRadius="2" Padding="6,2" Visibility="{x:Bind IsAcActive, Converter={StaticResource BoolToVisibility}}">
+                                                <TextBlock Text="PLUGGED IN (AC)" FontSize="9" FontWeight="Bold" Foreground="#93C5FD" />
+                                            </Border>
+
+                                            <!-- DC Preset Badge -->
+                                            <Border Background="#7C2D12" CornerRadius="2" Padding="6,2" Visibility="{x:Bind IsDcActive, Converter={StaticResource BoolToVisibility}}">
+                                                <TextBlock Text="ON BATTERY (DC)" FontSize="9" FontWeight="Bold" Foreground="#FDBA74" />
+                                            </Border>
+                                        </StackPanel>
+                                        <TextBlock Text="{x:Bind Description}" FontSize="12" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                        <TextBlock Text="{x:Bind Id}" FontSize="10" Foreground="{StaticResource AppTextMutedBrush}" />
+                                    </StackPanel>
+
+                                    <Button Grid.Column="1" VerticalAlignment="Center"
+                                            Visibility="{x:Bind IsActive, Converter={StaticResource InverseBoolToVisibility}}"
+                                            Click="OnSetActivePlanClick">
+                                        <TextBlock Text="Set Active" />
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

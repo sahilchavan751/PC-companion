@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="OmniControl.App.Views.OverviewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:OmniControl.Core.Models.Hardware"
+    mc:Ignorable="d">
+
+    <ScrollViewer Padding="24,16,24,24">
+        <StackPanel Spacing="20">
+            <!-- Header Banner Card -->
+            <Border Style="{StaticResource FluentCardStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="{x:Bind ViewModel.DeviceName, Mode=OneWay}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                            <Border Background="#1E293B" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
+                                <TextBlock Text="{x:Bind ViewModel.OsInfo, Mode=OneWay}" FontSize="11" Foreground="{StaticResource AppAccentBrush}" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Text="{x:Bind ViewModel.UptimeString, Mode=OneWay}" 
+                                   Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="12" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Border Style="{StaticResource LiveBadgeStyle}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Ellipse Width="6" Height="6" Fill="{StaticResource AppSuccessBrush}" />
+                                <TextBlock Text="Real-time (2s)" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                            </StackPanel>
+                        </Border>
+                        <Button Command="{x:Bind ViewModel.InitializeDataCommand}" Padding="8,6" CornerRadius="8" ToolTipService.ToolTip="Force Immediate Sync">
+                            <FontIcon Glyph="&#xE72C;" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 4 Primary Metric Cards Grid -->
+            <Grid ColumnSpacing="16" RowSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- CPU Card -->
+                <Border Grid.Column="0" Style="{StaticResource FluentCardStyle}">
+                    <Grid RowSpacing="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Header -->
+                        <Grid Grid.Row="0">
+                            <TextBlock Text="PROCESSOR (CPU)" Style="{StaticResource MetricLabelTextBlockStyle}" />
+                            <FontIcon Glyph="&#xE950;" HorizontalAlignment="Right" Foreground="{StaticResource AppAccentBrush}" FontSize="13" />
+                        </Grid>
+
+                        <!-- Circular Progress Gauge + Stats -->
+                        <Grid Grid.Row="1" Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Circular Progress Ring Gauge -->
+                            <Grid Width="64" Height="64" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ProgressRing Width="64" Height="64" Value="100" IsIndeterminate="False" Foreground="#1E1E1E" />
+                                <ProgressRing Width="64" Height="64" Value="{x:Bind ViewModel.CpuUsage, Mode=OneWay}" Maximum="100" IsIndeterminate="False" Foreground="{StaticResource AppAccentBrush}" />
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="{x:Bind ViewModel.CpuUsageString, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                    <TextBlock Text="%" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource AppTextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,-2,0,0" />
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Details next to Circular Gauge -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0,0,0" Spacing="3">
+                                <TextBlock Text="{x:Bind ViewModel.CpuName, Mode=OneWay}" TextTrimming="CharacterEllipsis" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource AppTextPrimaryBrush}" ToolTipService.ToolTip="{x:Bind ViewModel.CpuName, Mode=OneWay}" />
+                                <TextBlock Text="{x:Bind ViewModel.CpuDetails, Mode=OneWay}" FontSize="10" Foreground="{StaticResource AppTextMutedBrush}" TextTrimming="CharacterEllipsis" />
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Text="Temp:" FontSize="10" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                    <TextBlock Text="{x:Bind ViewModel.CpuTempString, Mode=OneWay}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AppWarningBrush}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Footer Info Block -->
+                        <Border Grid.Row="2" Background="#141414" BorderBrush="#222222" BorderThickness="1" Padding="8,4">
+                            <Grid>
+                                <TextBlock Text="Threads" FontSize="9" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.CpuCoreCountText, Mode=OneWay}" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource AppAccentBrush}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- RAM Card -->
+                <Border Grid.Column="1" Style="{StaticResource FluentCardStyle}">
+                    <Grid RowSpacing="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <TextBlock Text="MEMORY (RAM)" Style="{StaticResource MetricLabelTextBlockStyle}" />
+                            <FontIcon Glyph="&#xE9D9;" HorizontalAlignment="Right" Foreground="{StaticResource AppSuccessBrush}" FontSize="13" />
+                        </Grid>
+
+                        <Grid Grid.Row="1" Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Circular Progress Ring Gauge -->
+                            <Grid Width="64" Height="64" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ProgressRing Width="64" Height="64" Value="100" IsIndeterminate="False" Foreground="#1E1E1E" />
+                                <ProgressRing Width="64" Height="64" Value="{x:Bind ViewModel.RamUsage, Mode=OneWay}" Maximum="100" IsIndeterminate="False" Foreground="{StaticResource AppSuccessBrush}" />
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="{x:Bind ViewModel.RamUsageString, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                    <TextBlock Text="%" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource AppTextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,-2,0,0" />
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0,0,0" Spacing="3">
+                                <TextBlock Text="Active Memory" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.RamDetails, Mode=OneWay}" FontSize="10" Foreground="{StaticResource AppTextMutedBrush}" TextTrimming="CharacterEllipsis" />
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Text="Available:" FontSize="10" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                    <TextBlock Text="{x:Bind ViewModel.RamAvailableDetails, Mode=OneWay}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AppSuccessBrush}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Grid.Row="2" Background="#141414" BorderBrush="#222222" BorderThickness="1" Padding="8,4">
+                            <Grid>
+                                <TextBlock Text="Committed" FontSize="9" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.RamDetails, Mode=OneWay}" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource AppSuccessBrush}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- GPU Card -->
+                <Border Grid.Column="2" Style="{StaticResource FluentCardStyle}">
+                    <Grid RowSpacing="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <TextBlock Text="GRAPHICS (GPU)" Style="{StaticResource MetricLabelTextBlockStyle}" />
+                            <FontIcon Glyph="&#xE790;" HorizontalAlignment="Right" Foreground="{StaticResource AppAccentBrush}" FontSize="13" />
+                        </Grid>
+
+                        <Grid Grid.Row="1" Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Circular Progress Ring Gauge -->
+                            <Grid Width="64" Height="64" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ProgressRing Width="64" Height="64" Value="100" IsIndeterminate="False" Foreground="#1E1E1E" />
+                                <ProgressRing Width="64" Height="64" Value="{x:Bind ViewModel.GpuUsage, Mode=OneWay}" Maximum="100" IsIndeterminate="False" Foreground="{StaticResource AppAccentBrush}" />
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="{x:Bind ViewModel.GpuUsageString, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                    <TextBlock Text="%" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource AppTextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,-2,0,0" />
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0,0,0" Spacing="3">
+                                <TextBlock Text="{x:Bind ViewModel.GpuName, Mode=OneWay}" TextTrimming="CharacterEllipsis" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource AppTextPrimaryBrush}" ToolTipService.ToolTip="{x:Bind ViewModel.GpuName, Mode=OneWay}" />
+                                <TextBlock Text="{x:Bind ViewModel.GpuVramString, Mode=OneWay}" FontSize="10" Foreground="{StaticResource AppTextMutedBrush}" TextTrimming="CharacterEllipsis" />
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Text="Temp:" FontSize="10" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                    <TextBlock Text="{x:Bind ViewModel.GpuTempString, Mode=OneWay}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AppWarningBrush}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Grid.Row="2" Background="#141414" BorderBrush="#222222" BorderThickness="1" Padding="8,4">
+                            <Grid>
+                                <TextBlock Text="Dedicated VRAM" FontSize="9" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                <TextBlock Text="{x:Bind ViewModel.GpuVramString, Mode=OneWay}" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource AppAccentBrush}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Network Card -->
+                <Border Grid.Column="3" Style="{StaticResource FluentCardStyle}">
+                    <Grid RowSpacing="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <TextBlock Text="NETWORK THROUGHPUT" Style="{StaticResource MetricLabelTextBlockStyle}" />
+                            <FontIcon Glyph="&#xE839;" HorizontalAlignment="Right" Foreground="{StaticResource AppSuccessBrush}" FontSize="13" />
+                        </Grid>
+
+                        <Grid Grid.Row="1" Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Circular Progress Ring Activity Gauge -->
+                            <Grid Width="64" Height="64" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ProgressRing Width="64" Height="64" Value="100" IsIndeterminate="False" Foreground="#1E1E1E" />
+                                <ProgressRing Width="64" Height="64" Value="{x:Bind ViewModel.NetworkActivityPercent, Mode=OneWay}" Maximum="100" IsIndeterminate="False" Foreground="{StaticResource AppSuccessBrush}" />
+                                <FontIcon Glyph="&#xE839;" FontSize="18" Foreground="{StaticResource AppSuccessBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0,0,0" Spacing="4">
+                                <Grid>
+                                    <TextBlock Text="Down:" FontSize="10" Foreground="{StaticResource AppTextMutedBrush}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{x:Bind ViewModel.NetworkDownloadSpeed, Mode=OneWay}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AppSuccessBrush}" HorizontalAlignment="Right" />
+                                </Grid>
+                                <Grid>
+                                    <TextBlock Text="Up:" FontSize="10" Foreground="{StaticResource AppTextMutedBrush}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{x:Bind ViewModel.NetworkUploadSpeed, Mode=OneWay}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AppAccentBrush}" HorizontalAlignment="Right" />
+                                </Grid>
+                                <TextBlock Text="{x:Bind ViewModel.ActiveAdapterName, Mode=OneWay}" FontSize="9" Foreground="{StaticResource AppTextSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Grid.Row="2" Background="#141414" BorderBrush="#222222" BorderThickness="1" Padding="8,4">
+                            <Grid>
+                                <TextBlock Text="Interface" FontSize="9" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                <TextBlock Text="Live Telemetry" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource AppSuccessBrush}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Storage Disks Section -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="STORAGE VOLUMES" Style="{StaticResource SectionHeaderTextBlockStyle}" />
+                <ItemsControl ItemsSource="{x:Bind ViewModel.Drives, Mode=OneWay}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Grid ColumnSpacing="16" RowSpacing="16" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:DiskDriveInfo">
+                            <Border Style="{StaticResource FluentInteractiveCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Background="#1E293B" CornerRadius="8" Width="44" Height="44" Margin="0,0,16,0">
+                                        <FontIcon Glyph="&#xEDA2;" Foreground="{StaticResource AppAccentBrush}" />
+                                    </Border>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{x:Bind DriveLetter}" FontWeight="SemiBold" FontSize="14" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                            <TextBlock Text="{x:Bind VolumeLabel}" Foreground="{StaticResource AppTextSecondaryBrush}" FontSize="13" />
+                                            <Border Background="#2A344A" CornerRadius="3" Padding="4,1">
+                                                <TextBlock Text="{x:Bind FileSystem}" FontSize="10" Foreground="{StaticResource AppAccentBrush}" />
+                                            </Border>
+                                        </StackPanel>
+                                        <ProgressBar Value="{x:Bind UsagePercent}" Maximum="100" Height="6" CornerRadius="3" Foreground="{StaticResource AppAccentBrush}" Margin="0,4,16,0" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                        <TextBlock Text="{x:Bind FreeBytes, Converter={StaticResource FormatBytes}}" FontWeight="SemiBold" FontSize="13" HorizontalAlignment="Right" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                        <TextBlock Text="free of total" FontSize="11" Foreground="{StaticResource AppTextMutedBrush}" HorizontalAlignment="Right" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

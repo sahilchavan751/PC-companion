@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OmniControl.AdminHelper/OmniControl.AdminHelper.csproj" />
+    <Project Path="src/OmniControl.App/OmniControl.App.csproj" />
+    <Project Path="src/OmniControl.Core/OmniControl.Core.csproj" />
+    <Project Path="src/OmniControl.Infrastructure/OmniControl.Infrastructure.csproj" />
+    <Project Path="src/OmniControl.Tests/OmniControl.Tests.csproj" />
+  </Folder>
+</Solution>

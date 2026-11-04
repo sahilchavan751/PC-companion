@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="OmniControl.App.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer Padding="24,16,24,28">
+        <StackPanel Spacing="20" MaxWidth="840" HorizontalAlignment="Left">
+            <!-- Header Banner -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="PREFERENCES &amp; CONFIGURATION" Style="{StaticResource MetricLabelTextBlockStyle}" />
+                <TextBlock Text="System Settings" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                <TextBlock Text="Configure telemetry intervals, tray minimize behavior, security elevation, and studio diagnostics." FontSize="12" Foreground="{StaticResource AppTextSecondaryBrush}" />
+            </StackPanel>
+
+            <!-- 1. Workflow & System Integration -->
+            <Border Style="{StaticResource FluentCardStyle}">
+                <StackPanel Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE713;" FontSize="13" Foreground="{StaticResource AppAccentBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="WORKFLOW &amp; WINDOW BEHAVIOR" Style="{StaticResource SectionHeaderTextBlockStyle}" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Minimize to System Tray -->
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="3" VerticalAlignment="Center">
+                            <TextBlock Text="Minimize to System Tray" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                            <TextBlock Text="Closing the window with the 'X' button keeps OmniControl active in the notification tray" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" HorizontalAlignment="Right" IsOn="{x:Bind ViewModel.MinimizeToTray, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Border Background="{StaticResource AppDividerBrush}" Height="1" />
+
+                    <!-- Start with Windows -->
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="3" VerticalAlignment="Center">
+                            <TextBlock Text="Start with Windows" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                            <TextBlock Text="Automatically launch OmniControl in the background when signing into Windows" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" HorizontalAlignment="Right" IsOn="{x:Bind ViewModel.StartWithWindows, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Border Background="{StaticResource AppDividerBrush}" Height="1" />
+
+                    <!-- Theme Preference -->
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="3" VerticalAlignment="Center">
+                            <TextBlock Text="Appearance Theme" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                            <TextBlock Text="Blocky minimal dark noir aesthetic with sharp contrast" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Right" SelectedIndex="{x:Bind ViewModel.ThemeIndex, Mode=TwoWay}" Width="160">
+                            <x:String>Dark Noir (Default)</x:String>
+                            <x:String>Light</x:String>
+                            <x:String>System Default</x:String>
+                        </ComboBox>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 2. Hardware Engine & Telemetry -->
+            <Border Style="{StaticResource FluentCardStyle}">
+                <StackPanel Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE950;" FontSize="13" Foreground="{StaticResource AppAccentBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="TELEMETRY &amp; HARDWARE ENGINE" Style="{StaticResource SectionHeaderTextBlockStyle}" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Telemetry Polling Rate -->
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="3" VerticalAlignment="Center">
+                            <TextBlock Text="Hardware Telemetry Polling Interval" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                            <TextBlock Text="Refresh rate for CPU, GPU, RAM, sensors, network throughput, and disk I/O metrics" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" HorizontalAlignment="Right" SelectedIndex="{x:Bind ViewModel.RefreshIntervalIndex, Mode=TwoWay}" Width="210">
+                            <x:String>1000 ms (Fast - 1 sec)</x:String>
+                            <x:String>2000 ms (Real-time - 2 sec)</x:String>
+                            <x:String>3000 ms (Standard - 3 sec)</x:String>
+                            <x:String>5000 ms (Eco Mode - 5 sec)</x:String>
+                        </ComboBox>
+                    </Grid>
+
+                    <Border Background="{StaticResource AppDividerBrush}" Height="1" />
+
+                    <!-- Background Monitoring -->
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="3" VerticalAlignment="Center">
+                            <TextBlock Text="Background Hardware Monitoring" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                            <TextBlock Text="Maintain continuous LibreHardwareMonitor counters and ring buffers when minimized" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" HorizontalAlignment="Right" IsOn="{x:Bind ViewModel.BackgroundMonitoring, Mode=TwoWay}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 3. Security & Privilege Status -->
+            <Border Style="{StaticResource FluentCardStyle}">
+                <StackPanel Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE7EF;" FontSize="13" Foreground="{StaticResource AppAccentBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="SECURITY &amp; PRIVILEGE ISOLATION" Style="{StaticResource SectionHeaderTextBlockStyle}" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="4" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="Current Execution Mode:" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource AppTextPrimaryBrush}" />
+                                <Border Background="#14281E" BorderBrush="#2D6A4F" BorderThickness="1" CornerRadius="2" Padding="6,1">
+                                    <TextBlock Text="{x:Bind ViewModel.ElevationStatusText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource AppSuccessBrush}" />
+                                </Border>
+                            </StackPanel>
+                            <TextBlock Text="Privileged actions are executed through an out-of-process elevated worker with UAC authorization" FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                        </StackPanel>
+
+                        <Button Grid.Column="1" Command="{x:Bind ViewModel.TestElevationCommand}" Padding="12,6" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE7EF;" FontSize="11" Foreground="{StaticResource AppAccentBrush}" />
+                                <TextBlock Text="Authorize Helper (UAC)" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 4. About OmniControl & Studio Attribution -->
+            <Border Style="{StaticResource FluentCardStyle}">
+                <StackPanel Spacing="16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Spacing="4">
+                            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                <TextBlock Text="OMNICONTROL" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AppTextPrimaryBrush}" CharacterSpacing="80" />
+                                <Border Background="#0D1A1F" BorderBrush="#14333D" BorderThickness="1" CornerRadius="2" Padding="6,2">
+                                    <TextBlock Text="{x:Bind ViewModel.AppVersion, Mode=OneWay}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AppAccentBrush}" />
+                                </Border>
+                            </StackPanel>
+                            <TextBlock Text="- by Luxvore Studio" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource AppAccentBrush}" />
+                            <TextBlock Text="Unified Windows control and hardware telemetry suite with privilege isolation." FontSize="11" Foreground="{StaticResource AppTextSecondaryBrush}" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Background="{StaticResource AppDividerBrush}" Height="1" />
+
+                    <!-- Diagnostics & Folder Actions -->
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button Command="{x:Bind ViewModel.ExportDiagnosticsCommand}" Padding="12,7">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE8B7;" FontSize="12" Foreground="{StaticResource AppAccentBrush}" />
+                                <TextBlock Text="Export Diagnostics Report" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{x:Bind ViewModel.OpenLogsFolderCommand}" Padding="12,7">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE838;" FontSize="12" Foreground="{StaticResource AppTextSecondaryBrush}" />
+                                <TextBlock Text="Open App Data Folder" FontSize="12" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,77 @@
+## Build and Output Folders
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+ARM/
+ARM64/
+bld/
+[Bb]uild/
+artifacts/
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.dbmdl
+*.jfm
+
+## Visual Studio Code & IDEs
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+_ReSharper*/
+*.DotSettings.user
+*.dotCover
+
+## Build Logs & Dumps
+[Ll]og/
+[Ll]ogs/
+*.log
+*.binlog
+*.dmp
+*.dump
+
+## Test Results
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.assets.json
+
+## MSIX & WinUI Packaging
+AppPackages/
+BundleArtifacts/
+Package.StoreAssociation.xml
+_pkginfo.txt
+*.msix
+*.msixupload
+*.appx
+*.appxbundle
+*.appxupload
+Generated\ Files/
+*_wpftmp.csproj
+
+## Publish Output
+publish/
+*.pubxml
+PublishScripts/
+
+## Local Databases / Caches
+*.db-shm
+*.db-wal
